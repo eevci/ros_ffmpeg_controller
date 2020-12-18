@@ -4,8 +4,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 
-#include "ros_ffmpeg_driver/command_executor.h"
-#include "ros_ffmpeg_driver/ExecuteCommand.h"
+#include "ros_ffmpeg_controller/command_executor.h"
+#include "ros_ffmpeg_controller/ExecuteCommand.h"
 
 CommandExecutor command_executor;
 std::string FFMPEG_EXE_PATH = bp::search_path("ffmpeg").string();
@@ -21,7 +21,7 @@ std::string THREAD_CNT_ARG_KEY = "-threads";
 std::string BITRATE_ARG_KEY = "-b:v";
 
 
-std::vector<std::string> buildCommandString(ros_ffmpeg_driver::ExecuteCommand::Request& req){
+std::vector<std::string> buildCommandString(ros_ffmpeg_controller::ExecuteCommand::Request& req){
     std::vector<std::string> args;
     args.push_back(FFMPEG_EXE_PATH);
     args.push_back(NO_AUDIO_ARG);
@@ -76,8 +76,8 @@ std::vector<std::string> buildCommandString(ros_ffmpeg_driver::ExecuteCommand::R
 
 }
 
-bool handle_ffmpeg_request(ros_ffmpeg_driver::ExecuteCommand::Request& req,
-    ros_ffmpeg_driver::ExecuteCommand::Response& res)
+bool handle_ffmpeg_request(ros_ffmpeg_controller::ExecuteCommand::Request& req,
+    ros_ffmpeg_controller::ExecuteCommand::Response& res)
 {
     std::vector<std::string> commandArgs = buildCommandString(req);
     std::pair<int, std::shared_future<std::string>> results =command_executor.execute(commandArgs);
@@ -87,10 +87,10 @@ bool handle_ffmpeg_request(ros_ffmpeg_driver::ExecuteCommand::Request& req,
 int main(int argc, char** argv){
    
    
-    ros::init(argc, argv, "ffmpeg_driver");
+    ros::init(argc, argv, "ffmpeg_controller");
     ros::NodeHandle n;
 
-    ros::ServiceServer executerService = n.advertiseService("/ffmpeg_driver/execute", handle_ffmpeg_request);
+    ros::ServiceServer executerService = n.advertiseService("/ffmpeg_controller/execute", handle_ffmpeg_request);
    
     ros::spin();
 
