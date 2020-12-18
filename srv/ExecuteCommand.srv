@@ -1,0 +1,14 @@
+string input_path
+string output_path
+uint8 framerate
+int32 bitrate_k
+int32 max_delay 
+string inputFormat
+string outputFormat
+int32 probesize
+string video_size
+string vcodec
+uint8 threadCount
+
+---
+int32 pid
