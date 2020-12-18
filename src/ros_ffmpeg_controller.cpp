@@ -20,6 +20,7 @@ std::string VIDEO_CODEC_ARG_KEY = "-vcodec";
 std::string THREAD_CNT_ARG_KEY = "-threads";
 std::string BITRATE_ARG_KEY = "-b:v";
 
+boost::asio::io_service io_service;
 
 std::vector<std::string> buildCommandString(ros_ffmpeg_controller::ExecuteCommand::Request& req){
     std::vector<std::string> args;
@@ -80,8 +81,8 @@ bool handle_ffmpeg_request(ros_ffmpeg_controller::ExecuteCommand::Request& req,
     ros_ffmpeg_controller::ExecuteCommand::Response& res)
 {
     std::vector<std::string> commandArgs = buildCommandString(req);
-    std::pair<int, std::shared_future<std::string>> results =command_executor.execute(commandArgs);
-	res.pid = results.first;
+    ExecutionResult results = command_executor.execute(commandArgs, io_service);
+	res.pid = std::get<0>(results);
 }
 
 int main(int argc, char** argv){
@@ -91,7 +92,5 @@ int main(int argc, char** argv){
     ros::NodeHandle n;
 
     ros::ServiceServer executerService = n.advertiseService("/ffmpeg_controller/execute", handle_ffmpeg_request);
-   
     ros::spin();
-
 }
