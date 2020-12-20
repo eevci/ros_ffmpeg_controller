@@ -19,6 +19,7 @@ find_package(catkin REQUIRED
 add_service_files(
   FILES
   ExecuteCommand.srv
+  StopCommand.srv
 )
 
 

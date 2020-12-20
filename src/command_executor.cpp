@@ -20,10 +20,14 @@ ExecutionResult CommandExecutor::execute(std::vector<std::string> args, boost::a
             pid = c.id();
             lk.unlock();
             cv.notify_one();
-            io_context.run();
+            c.wait();
         }
     );
     m_workerThread.detach();
     cv.wait(lk);
     return std::make_tuple<>(pid, data.share(), error.share());
+}
+
+bool CommandExecutor::stop(pid_t pid){
+    return kill(pid,SIGKILL)==0;
 }

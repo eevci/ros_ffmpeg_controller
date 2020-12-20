@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/process.hpp>
+#include <csignal>
 #include <mutex>
 #include <condition_variable>
 #include <iostream>
@@ -15,4 +16,5 @@ class CommandExecutor
     
     public:
          ExecutionResult execute(std::vector<std::string> args, boost::asio::io_context& io_context);
+         bool stop(pid_t pid);
 };

@@ -6,6 +6,7 @@
 
 #include "ros_ffmpeg_controller/command_executor.h"
 #include "ros_ffmpeg_controller/ExecuteCommand.h"
+#include "ros_ffmpeg_controller/StopCommand.h"
 
 CommandExecutor command_executor;
 std::string FFMPEG_EXE_PATH = bp::search_path("ffmpeg").string();
@@ -77,12 +78,20 @@ std::vector<std::string> buildCommandString(ros_ffmpeg_controller::ExecuteComman
 
 }
 
-bool handle_ffmpeg_request(ros_ffmpeg_controller::ExecuteCommand::Request& req,
+bool handle_ffmpeg_execute_request(ros_ffmpeg_controller::ExecuteCommand::Request& req,
     ros_ffmpeg_controller::ExecuteCommand::Response& res)
 {
     std::vector<std::string> commandArgs = buildCommandString(req);
     ExecutionResult results = command_executor.execute(commandArgs, io_context);
 	res.pid = std::get<0>(results);
+    return res.pid > 0;
+}
+
+bool handle_ffmpeg_stop_request(ros_ffmpeg_controller::StopCommand::Request& req,
+    ros_ffmpeg_controller::StopCommand::Response& res)
+{    
+	res.result = command_executor.stop(req.pid);
+    return res.result;
 }
 
 int main(int argc, char** argv){
@@ -91,6 +100,7 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "ffmpeg_controller");
     ros::NodeHandle n;
 
-    ros::ServiceServer executerService = n.advertiseService("/ffmpeg_controller/execute", handle_ffmpeg_request);
+    ros::ServiceServer executerService = n.advertiseService("/ffmpeg_controller/execute", handle_ffmpeg_execute_request);
+    ros::ServiceServer stopperService = n.advertiseService("/ffmpeg_controller/stop", handle_ffmpeg_stop_request);
     ros::spin();
 }
