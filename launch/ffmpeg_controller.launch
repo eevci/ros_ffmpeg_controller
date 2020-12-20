@@ -1,0 +1,6 @@
+<launch>
+
+  <node name="ffmpeg_controller" type="ffmpeg_controller" pkg="ros_ffmpeg_controller">
+  </node>
+  
+</launch>
