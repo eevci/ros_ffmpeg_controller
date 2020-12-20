@@ -50,4 +50,3 @@ add_dependencies(ffmpeg_controller ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_
 target_link_libraries(ffmpeg_controller ${PROJECT_NAME}
                              ${catkin_LIBRARIES}
 )
-

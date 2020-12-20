@@ -1,13 +1,11 @@
 #pragma once
 
 #include <boost/process.hpp>
-#include <boost/interprocess/shared_memory_object.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-#include <boost/interprocess/sync/named_mutex.hpp>
+#include <mutex>
+#include <condition_variable>
 #include <iostream>
 
 namespace bp = boost::process;
-namespace bip = boost::interprocess;
 
 
 typedef std::tuple<int, std::shared_future<std::string>, std::shared_future<std::string>> ExecutionResult;
@@ -16,5 +14,5 @@ class CommandExecutor
 {
     
     public:
-         ExecutionResult execute(std::vector<std::string> args, boost::asio::io_service& io_service);
+         ExecutionResult execute(std::vector<std::string> args, boost::asio::io_context& io_context);
 };
